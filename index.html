@@ -1,0 +1,24 @@
+document.getElementById('generate').addEventListener('click', function () {
+    // Şablon dosyasını yüklüyoruz
+    fetch('SHİFT.docm')  // Dosya adını burada doğru şekilde değiştiriyoruz.
+        .then(response => response.arrayBuffer())
+        .then(data => {
+            const zip = new PizZip(data);
+            const doc = new window.docxtemplater().loadZip(zip);
+
+            // Formdaki verileri alıp Word dosyasına yerleştiriyoruz
+            const formData = {
+                name: document.getElementById('name').value,
+                age: document.getElementById('age').value
+            };
+            doc.setData(formData);
+
+            try {
+                doc.render(); // Veriyi şablona uygula
+                const out = doc.getZip().generate({ type: 'blob' });
+                saveAs(out, 'düzenlenmiş_dosya.docx'); // İndir
+            } catch (error) {
+                console.error('Error rendering document:', error);
+            }
+        });
+});
