@@ -1,24 +1,24 @@
 document.getElementById('generate').addEventListener('click', function () {
     // Şablon dosyasını yüklüyoruz
-    fetch('SHİFT.docm')  // Dosya adını burada doğru şekilde değiştiriyoruz.
-        .then(response => response.arrayBuffer())
+    fetch('SHİFT.docm') // Dosya yolunun doğru olduğundan emin olun
+        .then(response => response.arrayBuffer()) // Dosya verisini al
         .then(data => {
-            const zip = new PizZip(data);
-            const doc = new window.docxtemplater().loadZip(zip);
+            const zip = new PizZip(data); // Veriyi PizZip ile işleyin
+            const doc = new window.docxtemplater().loadZip(zip); // Docxtemplater ile yükleyin
 
             // Formdaki verileri alıp Word dosyasına yerleştiriyoruz
             const formData = {
                 name: document.getElementById('name').value,
                 age: document.getElementById('age').value
             };
-            doc.setData(formData);
+            doc.setData(formData); // Form verilerini şablona ekleyin
 
             try {
                 doc.render(); // Veriyi şablona uygula
-                const out = doc.getZip().generate({ type: 'blob' });
+                const out = doc.getZip().generate({ type: 'blob' }); // Şablonu oluştur
                 saveAs(out, 'düzenlenmiş_dosya.docx'); // İndir
             } catch (error) {
-                console.error('Error rendering document:', error);
+                console.error('Error rendering document:', error); // Hata olursa konsola yazdır
             }
         });
 });
